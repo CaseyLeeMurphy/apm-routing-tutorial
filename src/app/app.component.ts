@@ -10,6 +10,7 @@ import {
 
 import { AuthService } from './user/auth.service';
 import { slideInAnimation } from './app.animation';
+import { MessageService } from './messages/message.service';
 
 @Component({
   selector: 'pm-root',
@@ -32,9 +33,14 @@ export class AppComponent {
     return '';
   }
 
+  get messagesDisplayed(): boolean {
+    return this._messageService.isDisplayed;
+  }
+
   constructor(
     private authService: AuthService,
-    private readonly _router: Router
+    private readonly _router: Router,
+    private readonly _messageService: MessageService
   ) {
     this._router.events.subscribe((inRouteEvent: Event) => {
       this.checkRouterEvent(inRouteEvent);
@@ -58,5 +64,13 @@ export class AppComponent {
   logOut(): void {
     this.authService.logout();
     this._router.navigate(['/welcome']);
+  }
+
+  showMessages(): void {
+    this._router.navigate([{outlets: {popup: ['messages']}}]);
+  }
+
+  hideMessages(): void {
+    this._router.navigate([{outlets: {popup: null}}]);
   }
 }
